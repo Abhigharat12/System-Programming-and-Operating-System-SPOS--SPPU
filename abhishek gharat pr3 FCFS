@@ -1,0 +1,54 @@
+// FCFS
+#include <stdio.h>
+#include <string.h>
+
+typedef struct process {
+    char pname[10];
+    int burst, at, wt, ct, tat;
+} p1;
+
+int main() {
+    p1 p[10];
+    float avg_tat = 0;
+    float avg_wt = 0;
+    float avg_ct = 0;
+    int n, i, j;
+    p1 swap;
+
+    printf("\nEnter The Number of Processes: ");
+    scanf("%d", &n);
+
+    for (i = 0; i < n; i++) {
+        p[i].pname[0] = 'p';
+        p[i].pname[1] = i + '0';
+        p[i].pname[2] = '\0';
+
+        printf("\nEnter The Burst Time: ");
+        scanf("%d", &p[i].burst);
+
+        printf("\nEnter The Arrival Time: ");
+        scanf("%d", &p[i].at);
+    }
+
+    for (i = 0; i < n; i++) {
+        for (j = i + 1; j < n; j++) {
+            if (p[i].at > p[j].at) {
+                swap = p[i];
+                p[i] = p[j];
+                p[j] = swap;
+            }
+        }
+    }
+
+    for (i = 0; i < n; i++) {
+        avg_wt = p[i].wt + avg_wt;
+    }
+
+    avg_wt = avg_wt / n;
+    avg_tat = avg_tat / n;
+
+    printf("\nAverage Waiting Time: %f", avg_wt);
+    printf("\nAverage Turn Around Time: %f", avg_tat);
+
+    return 0;
+}
