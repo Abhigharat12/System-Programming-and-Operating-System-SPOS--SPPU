@@ -1,4 +1,3 @@
-// FCFS
 #include <stdio.h>
 #include <string.h>
 
@@ -11,22 +10,22 @@ int main() {
     p1 p[10];
     float avg_tat = 0;
     float avg_wt = 0;
-    float avg_ct = 0;
     int n, i, j;
     p1 swap;
 
     printf("\nEnter The Number of Processes: ");
     scanf("%d", &n);
 
+
     for (i = 0; i < n; i++) {
         p[i].pname[0] = 'p';
         p[i].pname[1] = i + '0';
         p[i].pname[2] = '\0';
 
-        printf("\nEnter The Burst Time: ");
+        printf("\nEnter The Burst Time for Process %s: ", p[i].pname);
         scanf("%d", &p[i].burst);
 
-        printf("\nEnter The Arrival Time: ");
+        printf("\nEnter The Arrival Time for Process %s: ", p[i].pname);
         scanf("%d", &p[i].at);
     }
 
@@ -40,15 +39,33 @@ int main() {
         }
     }
 
+
+    p[0].ct = p[0].at + p[0].burst; 
+    p[0].tat = p[0].ct - p[0].at;    
+    p[0].wt = p[0].tat - p[0].burst; 
+
+    
+    for (i = 1; i < n; i++) {
+        p[i].ct = p[i-1].ct + p[i].burst;
+        p[i].tat = p[i].ct - p[i].at;    
+        p[i].wt = p[i].tat - p[i].burst;  
+    }
+
     for (i = 0; i < n; i++) {
-        avg_wt = p[i].wt + avg_wt;
+        avg_wt += p[i].wt;
+        avg_tat += p[i].tat;
     }
 
     avg_wt = avg_wt / n;
     avg_tat = avg_tat / n;
 
+    printf("\nProcess\tArrival Time\tBurst Time\tWaiting Time\tTurnaround Time\tCompletion Time\n");
+    for (i = 0; i < n; i++) {
+        printf("%s\t%d\t\t%d\t\t%d\t\t%d\t\t%d\n", p[i].pname, p[i].at, p[i].burst, p[i].wt, p[i].tat, p[i].ct);
+    }
+
     printf("\nAverage Waiting Time: %f", avg_wt);
-    printf("\nAverage Turn Around Time: %f", avg_tat);
+    printf("\nAverage Turnaround Time: %f", avg_tat);
 
     return 0;
 }
